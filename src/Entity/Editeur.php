@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\AuteurRepository;
+use App\Repository\EditeurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=AuteurRepository::class)
+ * @ORM\Entity(repositoryClass=EditeurRepository::class)
  */
-class Auteur
+class Editeur
 {
     /**
      * @ORM\Id
@@ -25,13 +25,12 @@ class Auteur
     private $nom;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Nationalite::class, inversedBy="auteurs")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=Genre::class, inversedBy="Editeur")
      */
-    private $prenom;
+    private $genre;
 
     /**
-     * @ORM\OneToMany(targetEntity=Livre::class, mappedBy="auteur")
+     * @ORM\OneToMany(targetEntity=Livre::class, mappedBy="editeur")
      */
     private $livres;
 
@@ -57,14 +56,14 @@ class Auteur
         return $this;
     }
 
-    public function getPrenom(): ?Nationalite
+    public function getGenre(): ?Genre
     {
-        return $this->prenom;
+        return $this->genre;
     }
 
-    public function setPrenom(?Nationalite $prenom): self
+    public function setGenre(?Genre $genre): self
     {
-        $this->prenom = $prenom;
+        $this->genre = $genre;
 
         return $this;
     }
@@ -81,7 +80,7 @@ class Auteur
     {
         if (!$this->livres->contains($livre)) {
             $this->livres[] = $livre;
-            $livre->setAuteur($this);
+            $livre->setEditeur($this);
         }
 
         return $this;
@@ -91,8 +90,8 @@ class Auteur
     {
         if ($this->livres->removeElement($livre)) {
             // set the owning side to null (unless already changed)
-            if ($livre->getAuteur() === $this) {
-                $livre->setAuteur(null);
+            if ($livre->getEditeur() === $this) {
+                $livre->setEditeur(null);
             }
         }
 
